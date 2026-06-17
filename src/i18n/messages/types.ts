@@ -36,6 +36,12 @@ export type Messages = {
     mute: string;
   };
 
+  footer: {
+    cta: string;
+    contact: string;
+    prefill: string;
+  };
+
   rsvp: {
     title: string;
     subtitle: string;

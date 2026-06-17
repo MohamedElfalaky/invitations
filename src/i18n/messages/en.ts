@@ -42,6 +42,12 @@ export const en: Messages = {
     mute: "Mute music",
   },
 
+  footer: {
+    cta: "Want an invitation like this one?",
+    contact: "Chat with us on WhatsApp",
+    prefill: "I'd love to create an invitation like this one:",
+  },
+
   rsvp: {
     title: "RSVP",
     subtitle: "Kindly let us know if you'll be joining us",
