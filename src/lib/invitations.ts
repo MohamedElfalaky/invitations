@@ -15,8 +15,12 @@ import type {
   ThemeKey,
 } from "@/types/invitation";
 
-const COLUMNS =
+// Public-safe columns (no view_token) — used for guest-facing invitation pages.
+const PUBLIC_COLUMNS =
   "id, slug, theme, host_names, event_type, event_date, venue_name, venue_address, map_url, hero_image_url, gallery, music_url, languages, rsvp_enabled, extra_config, created_at, updated_at";
+
+// Admin reads additionally include the secret host-link token.
+const ADMIN_COLUMNS = `${PUBLIC_COLUMNS}, view_token`;
 
 export const invitationTag = (slug: string) => `invitation:${slug}`;
 
@@ -32,7 +36,7 @@ export function getInvitationBySlug(slug: string): Promise<Invitation | null> {
       const supabase = createPublicClient();
       const { data, error } = await supabase
         .from("invitations")
-        .select(COLUMNS)
+        .select(PUBLIC_COLUMNS)
         .eq("slug", slug)
         .maybeSingle();
 
@@ -51,7 +55,7 @@ export async function listInvitations(): Promise<InvitationListItem[]> {
   const supabase = await createServerSupabase();
   const { data, error } = await supabase
     .from("invitations")
-    .select(`${COLUMNS}, rsvps(count)`)
+    .select(`${ADMIN_COLUMNS}, rsvps(count)`)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -70,7 +74,7 @@ export async function getInvitationById(id: string): Promise<Invitation | null> 
   const supabase = await createServerSupabase();
   const { data, error } = await supabase
     .from("invitations")
-    .select(COLUMNS)
+    .select(ADMIN_COLUMNS)
     .eq("id", id)
     .maybeSingle();
 
@@ -121,7 +125,7 @@ export async function createInvitation(
   const { data, error } = await supabase
     .from("invitations")
     .insert(toRow(input))
-    .select(COLUMNS)
+    .select(ADMIN_COLUMNS)
     .single();
 
   if (error) throw error;
@@ -137,7 +141,7 @@ export async function updateInvitation(
     .from("invitations")
     .update(toRow(input))
     .eq("id", id)
-    .select(COLUMNS)
+    .select(ADMIN_COLUMNS)
     .single();
 
   if (error) throw error;

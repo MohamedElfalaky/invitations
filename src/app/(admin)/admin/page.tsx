@@ -76,7 +76,7 @@ export default async function AdminDashboard() {
                         >
                           View
                         </Link>
-                        <CopyLinkButton slug={inv.slug} />
+                        <CopyLinkButton path={`/i/${inv.slug}`} />
                         <Link
                           href={`/admin/invitations/${inv.id}/rsvps`}
                           className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-100"

@@ -30,8 +30,16 @@ async function copyText(text: string): Promise<boolean> {
   }
 }
 
-/** Copies the public invitation URL to the clipboard. */
-export function CopyLinkButton({ slug }: { slug: string }) {
+/** Copies an absolute URL (built from `path`) to the clipboard. */
+export function CopyLinkButton({
+  path,
+  label = "Copy link",
+  className = "rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-100",
+}: {
+  path: string;
+  label?: string;
+  className?: string;
+}) {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
 
   async function copy() {
@@ -41,7 +49,7 @@ export function CopyLinkButton({ slug }: { slug: string }) {
       (typeof window !== "undefined" && window.location.origin) ||
       process.env.NEXT_PUBLIC_SITE_URL ||
       "";
-    const url = `${base}/i/${slug}`;
+    const url = `${base}${path}`;
 
     const ok = await copyText(url);
     if (ok) {
@@ -56,16 +64,12 @@ export function CopyLinkButton({ slug }: { slug: string }) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={copy}
-      className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-100"
-    >
+    <button type="button" onClick={copy} className={className}>
       {state === "copied"
         ? "Copied!"
         : state === "failed"
           ? "Copy manually"
-          : "Copy link"}
+          : label}
     </button>
   );
 }

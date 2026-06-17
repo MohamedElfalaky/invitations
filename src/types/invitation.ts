@@ -64,6 +64,12 @@ export type Invitation = {
   languages: Locale[];
   rsvpEnabled: boolean;
   extraConfig: ExtraConfig;
+  /**
+   * Secret token for the private host-summary link (/r/<token>). Only populated
+   * for admin reads — it is deliberately NOT selected for public invitation
+   * pages, so it never leaks into a guest-facing bundle.
+   */
+  viewToken: string | null;
   createdAt: string;
   updatedAt: string;
 };

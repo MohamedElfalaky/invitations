@@ -149,6 +149,7 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
       languages: state.languages.length ? state.languages : ["ar"],
       rsvpEnabled: state.rsvpEnabled,
       extraConfig: buildExtraConfig(state),
+      viewToken: null,
       createdAt: invitation?.createdAt ?? now,
       updatedAt: now,
     };

@@ -47,8 +47,28 @@ export default async function RsvpDashboard({
             <h1 className="text-2xl font-semibold">RSVPs — {hostName}</h1>
             <p className="text-sm text-neutral-500">/i/{invitation.slug}</p>
           </div>
-          <CopyLinkButton slug={invitation.slug} />
+          <CopyLinkButton path={`/i/${invitation.slug}`} label="Copy invitation link" />
         </div>
+
+        {/* Private host link: share with the event host so they can watch the
+            numbers live without an admin login. */}
+        {invitation.viewToken && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#e6dcc8] bg-[#faf7f2] p-4">
+            <div className="text-sm">
+              <p className="font-medium text-[#2e2a23]">
+                Host link — live RSVP summary (no login)
+              </p>
+              <p className="text-neutral-500">
+                Private, read-only. Share only with the event host.
+              </p>
+            </div>
+            <CopyLinkButton
+              path={`/r/${invitation.viewToken}`}
+              label="Copy host link"
+              className="rounded-full bg-[#a98b5d] px-4 py-2 text-xs font-medium text-white hover:opacity-90"
+            />
+          </div>
+        )}
 
         {/* Counts */}
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">

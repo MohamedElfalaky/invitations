@@ -25,6 +25,7 @@ export type InvitationRow = {
   languages: unknown;
   rsvp_enabled: boolean;
   extra_config: unknown;
+  view_token?: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -74,9 +75,15 @@ export function mapInvitation(row: InvitationRow): Invitation {
     languages: toLocales(row.languages),
     rsvpEnabled: row.rsvp_enabled,
     extraConfig: (row.extra_config ?? {}) as Invitation["extraConfig"],
+    viewToken: row.view_token ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
+}
+
+/** Parse a bilingual jsonb value into a Localized object. */
+export function toLocalizedValue(value: unknown): Localized {
+  return toLocalized(value);
 }
 
 export function mapRsvp(row: RsvpRow): Rsvp {

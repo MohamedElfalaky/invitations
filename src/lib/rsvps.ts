@@ -1,6 +1,7 @@
 import { createServerSupabase } from "@/lib/supabase/server";
-import { mapRsvp, type RsvpRow } from "@/lib/mappers";
-import type { Rsvp, RsvpCounts, RsvpStatus } from "@/types/invitation";
+import { createPublicClient } from "@/lib/supabase/public";
+import { mapRsvp, toLocalizedValue, type RsvpRow } from "@/lib/mappers";
+import type { Localized, Rsvp, RsvpCounts, RsvpStatus } from "@/types/invitation";
 
 export const rsvpTag = (invitationId: string) => `rsvps:${invitationId}`;
 
@@ -61,4 +62,59 @@ export async function createRsvp(input: CreateRsvpInput): Promise<void> {
     message: input.message,
   });
   if (error) throw error;
+}
+
+export type HostSummary = {
+  slug: string;
+  hostNames: Localized;
+  eventDate: string;
+  rsvps: Rsvp[];
+  counts: RsvpCounts;
+};
+
+type SummaryRpcRow = {
+  guest_name: string;
+  status: RsvpStatus;
+  guests_count: number;
+  message: string | null;
+  created_at: string;
+};
+
+/**
+ * Token-gated, read-only RSVP summary for the host link (/r/<token>). Calls the
+ * SECURITY DEFINER `host_rsvp_summary` function with the anon client, so no
+ * privileged key is needed and an invalid token simply yields null.
+ */
+export async function getHostSummary(token: string): Promise<HostSummary | null> {
+  const supabase = createPublicClient();
+  const { data, error } = await supabase.rpc("host_rsvp_summary", {
+    p_token: token,
+  });
+  if (error) throw error;
+  if (!data) return null;
+
+  const payload = data as {
+    slug: string;
+    host_names: unknown;
+    event_date: string;
+    rsvps: SummaryRpcRow[];
+  };
+
+  const rsvps: Rsvp[] = (payload.rsvps ?? []).map((r, i) => ({
+    id: String(i),
+    invitationId: "",
+    guestName: r.guest_name,
+    status: r.status,
+    guestsCount: r.guests_count,
+    message: r.message ?? null,
+    createdAt: r.created_at,
+  }));
+
+  return {
+    slug: payload.slug,
+    hostNames: toLocalizedValue(payload.host_names),
+    eventDate: payload.event_date,
+    rsvps,
+    counts: computeCounts(rsvps),
+  };
 }
