@@ -39,6 +39,7 @@ type FormState = {
   venueAddress: string;
   mapUrl: string;
   heroImageUrl: string;
+  shareImageUrl: string;
   gallery: string[];
   musicUrl: string;
   languages: Locale[];
@@ -68,6 +69,7 @@ function initialState(inv?: Invitation): FormState {
     venueAddress: inv?.venueAddress ?? "",
     mapUrl: inv?.mapUrl ?? "",
     heroImageUrl: inv?.heroImageUrl ?? "",
+    shareImageUrl: inv?.extraConfig.share_image_url ?? "",
     gallery: inv?.gallery ?? [],
     musicUrl: inv?.musicUrl ?? "",
     languages: inv?.languages ?? ["ar", "en"],
@@ -84,6 +86,7 @@ function buildExtraConfig(s: FormState): ExtraConfig {
   if (s.messageEn || s.messageAr)
     extra.invitation_message = { en: s.messageEn, ar: s.messageAr };
   if (s.noteEn || s.noteAr) extra.note = { en: s.noteEn, ar: s.noteAr };
+  if (s.shareImageUrl) extra.share_image_url = s.shareImageUrl;
   return extra;
 }
 
@@ -355,6 +358,50 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
                   className="text-xs text-red-600"
                 >
                   Remove hero
+                </button>
+              )}
+            </div>
+          </div>
+        </Fieldset>
+
+        {/* Share cover image (Open Graph) */}
+        <Fieldset title="Share cover image">
+          <p className="mb-3 text-xs text-neutral-500">
+            Shown in the link preview when the invitation is shared (WhatsApp,
+            Twitter/X, iMessage…). Best at ~1200×630. If left empty, the hero
+            image is used.
+          </p>
+          <div className="flex items-start gap-4">
+            {state.shareImageUrl && (
+              <div className="relative h-20 w-36 overflow-hidden rounded-xl border border-neutral-200">
+                <Image
+                  src={state.shareImageUrl}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="144px"
+                />
+              </div>
+            )}
+            <div className="space-y-2">
+              <MediaUpload
+                folder="share"
+                label="Upload cover"
+                onUploaded={(url) => set("shareImageUrl", url)}
+              />
+              <input
+                className={inputCls}
+                value={state.shareImageUrl}
+                onChange={(e) => set("shareImageUrl", e.target.value)}
+                placeholder="…or paste an image URL"
+              />
+              {state.shareImageUrl && (
+                <button
+                  type="button"
+                  onClick={() => set("shareImageUrl", "")}
+                  className="text-xs text-red-600"
+                >
+                  Remove cover
                 </button>
               )}
             </div>

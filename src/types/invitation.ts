@@ -38,6 +38,12 @@ export type ExtraConfig = {
   venue?: Localized;
   /** Localized dress code / notes. */
   note?: Localized;
+  /**
+   * Image shown in the link preview when the invitation is shared (WhatsApp,
+   * Twitter/X, iMessage, …) — the Open Graph image. Falls back to the hero
+   * image when not set. Best at ~1200×630.
+   */
+  share_image_url?: string;
 };
 
 /** The canonical invitation shape (camelCase, app-facing). */

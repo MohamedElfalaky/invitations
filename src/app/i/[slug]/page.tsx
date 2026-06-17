@@ -23,12 +23,33 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!invitation) return { title: "Invitation not found" };
 
   const name = invitation.hostNames.ar || invitation.hostNames.en || "Invitation";
+  const description =
+    invitation.extraConfig.invitation_message?.ar ||
+    invitation.extraConfig.invitation_message?.en ||
+    undefined;
+
+  // The link-preview image (WhatsApp/Twitter/iMessage): the dedicated share
+  // cover if set, otherwise the hero image.
+  const shareImage =
+    invitation.extraConfig.share_image_url || invitation.heroImageUrl;
+  const images = shareImage
+    ? [{ url: shareImage, width: 1200, height: 630, alt: name }]
+    : undefined;
+
   return {
     title: name,
-    description: invitation.extraConfig.invitation_message?.en ?? undefined,
+    description,
     openGraph: {
+      type: "website",
       title: name,
-      images: invitation.heroImageUrl ? [invitation.heroImageUrl] : undefined,
+      description,
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: name,
+      description,
+      images: shareImage ? [shareImage] : undefined,
     },
   };
 }
