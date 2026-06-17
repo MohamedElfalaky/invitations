@@ -32,6 +32,8 @@ export type RsvpStatus = (typeof RSVP_STATUSES)[number];
  * never need a migration to add a presentational field.
  */
 export type ExtraConfig = {
+  /** Localized free-text headline shown at the top of the hero, above the invitation line. */
+  headline?: Localized;
   /** Localized invitation body copy shown under the hero. */
   invitation_message?: Localized;
   /** Optional localized venue override (otherwise the plain text columns are used). */

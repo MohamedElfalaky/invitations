@@ -7,6 +7,8 @@ export type Messages = {
   otherLocaleName: string;
 
   invited: string;
+  /** "You are invited to {event}" — `{event}` is replaced with the event type. */
+  invitedTo: string;
   weInviteYou: string;
 
   eventType: Record<EventType, string>;

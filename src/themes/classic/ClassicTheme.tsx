@@ -17,6 +17,7 @@ export function ClassicTheme({ invitation }: ThemeProps) {
   const display = locale === "ar" ? "font-arabic-serif" : "font-serif";
 
   const hostNames = localized(invitation.hostNames);
+  const headline = localized(invitation.extraConfig.headline);
   const message = localized(invitation.extraConfig.invitation_message);
 
   return (
@@ -43,10 +44,14 @@ export function ClassicTheme({ invitation }: ThemeProps) {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative mx-auto flex max-w-2xl flex-col items-center px-6 py-24 text-center"
         >
-          <p className="text-sm uppercase tracking-[0.3em] text-[#a98b5d]">
-            {m.eventType[invitation.eventType]}
+          {headline && (
+            <p className="text-sm uppercase tracking-[0.3em] text-[#a98b5d]">
+              {headline}
+            </p>
+          )}
+          <p className={`text-base opacity-70 ${headline ? "mt-4" : ""}`}>
+            {m.invitedTo.replace("{event}", m.eventType[invitation.eventType])}
           </p>
-          <p className="mt-6 text-base opacity-70">{m.invited}</p>
 
           <h1 className={`mt-3 text-5xl leading-tight sm:text-6xl ${display}`}>
             {hostNames}

@@ -7,6 +7,7 @@ export const ar: Messages = {
   otherLocaleName: "English",
 
   invited: "أنتم مدعوون",
+  invitedTo: "أنتم مدعوون ل{event}",
   weInviteYou: "يسعدنا دعوتكم لمشاركتنا",
 
   eventType: {

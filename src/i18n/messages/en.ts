@@ -7,6 +7,7 @@ export const en: Messages = {
   otherLocaleName: "العربية",
 
   invited: "You are invited",
+  invitedTo: "You are invited to {event}",
   weInviteYou: "We joyfully invite you to celebrate",
 
   eventType: {

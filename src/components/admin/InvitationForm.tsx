@@ -44,6 +44,8 @@ type FormState = {
   musicUrl: string;
   languages: Locale[];
   rsvpEnabled: boolean;
+  headlineEn: string;
+  headlineAr: string;
   messageEn: string;
   messageAr: string;
   noteEn: string;
@@ -74,6 +76,8 @@ function initialState(inv?: Invitation): FormState {
     musicUrl: inv?.musicUrl ?? "",
     languages: inv?.languages ?? ["ar", "en"],
     rsvpEnabled: inv?.rsvpEnabled ?? true,
+    headlineEn: inv?.extraConfig.headline?.en ?? "",
+    headlineAr: inv?.extraConfig.headline?.ar ?? "",
     messageEn: inv?.extraConfig.invitation_message?.en ?? "",
     messageAr: inv?.extraConfig.invitation_message?.ar ?? "",
     noteEn: inv?.extraConfig.note?.en ?? "",
@@ -83,6 +87,8 @@ function initialState(inv?: Invitation): FormState {
 
 function buildExtraConfig(s: FormState): ExtraConfig {
   const extra: ExtraConfig = {};
+  if (s.headlineEn || s.headlineAr)
+    extra.headline = { en: s.headlineEn, ar: s.headlineAr };
   if (s.messageEn || s.messageAr)
     extra.invitation_message = { en: s.messageEn, ar: s.messageAr };
   if (s.noteEn || s.noteAr) extra.note = { en: s.noteEn, ar: s.noteAr };
@@ -267,6 +273,35 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
                 className={inputCls}
                 value={state.eventDateLocal}
                 onChange={(e) => set("eventDateLocal", e.target.value)}
+              />
+            </div>
+          </div>
+        </Fieldset>
+
+        {/* Hero headline */}
+        <Fieldset title="Hero headline (optional)">
+          <p className="mb-3 text-xs text-neutral-500">
+            Free text shown at the top of the hero, above the “You are invited
+            to …” line. Fill one language and it shows in both.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className={labelCls}>Headline (English)</label>
+              <input
+                className={inputCls}
+                value={state.headlineEn}
+                onChange={(e) => set("headlineEn", e.target.value)}
+                placeholder="With great joy"
+              />
+            </div>
+            <div>
+              <label className={labelCls}>Headline (Arabic)</label>
+              <input
+                dir="rtl"
+                className={inputCls}
+                value={state.headlineAr}
+                onChange={(e) => set("headlineAr", e.target.value)}
+                placeholder="بكل فرح وسرور"
               />
             </div>
           </div>
