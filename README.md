@@ -40,9 +40,12 @@ cp .env.example .env.local   # then fill in the values (see below)
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | yes | Supabase project URL (Settings → API) |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes | Supabase anon/public key (Settings → API) |
+| `NEXT_PUBLIC_SUPABASE_URL` | yes | Supabase project URL (Connect button, or Settings → API) |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | yes* | Public key for newer projects (`sb_publishable_…`) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes* | Anon JWT for older projects — set this **instead** if your project has no publishable key |
 | `NEXT_PUBLIC_SITE_URL` | recommended | Public origin used for "copy link" (e.g. `http://localhost:3000` or your domain) |
+
+\* Set **one** of the two keys. The app prefers the publishable key and falls back to the anon key.
 
 > No service-role key is needed. Row Level Security allows public **reads** of
 > invitations and public **inserts** of RSVPs; everything else requires an

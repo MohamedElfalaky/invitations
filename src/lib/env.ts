@@ -17,9 +17,13 @@ export const env = {
     );
   },
   get supabaseAnonKey() {
+    // Supabase's newer projects issue a "publishable" key (sb_publishable_...);
+    // older ones issue an "anon" JWT. Both are public-safe and RLS-enforced, so
+    // accept either — preferring the publishable key when present.
     return required(
-      "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY)",
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     );
   },
   /** Public site origin, used for "copy link". Falls back to relative URLs. */
