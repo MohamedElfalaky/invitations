@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { saveInvitation } from "@/app/actions/invitations";
 import { MediaUpload } from "@/components/admin/MediaUpload";
+import { AssetPicker } from "@/components/admin/AssetPicker";
 import { ThemePreview } from "@/components/admin/ThemePreview";
 import { slugify } from "@/lib/slug";
 import type { InvitationInput } from "@/lib/invitations";
@@ -376,11 +377,18 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
               </div>
             )}
             <div className="space-y-2">
-              <MediaUpload
-                folder="hero"
-                label="Upload image"
-                onUploaded={(url) => set("heroImageUrl", url)}
-              />
+              <div className="flex flex-wrap gap-2">
+                <MediaUpload
+                  folder="hero"
+                  kind="image"
+                  label="Upload image"
+                  onUploaded={(url) => set("heroImageUrl", url)}
+                />
+                <AssetPicker
+                  kind="image"
+                  onSelect={(url) => set("heroImageUrl", url)}
+                />
+              </div>
               <input
                 className={inputCls}
                 value={state.heroImageUrl}
@@ -420,11 +428,18 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
               </div>
             )}
             <div className="space-y-2">
-              <MediaUpload
-                folder="share"
-                label="Upload cover"
-                onUploaded={(url) => set("shareImageUrl", url)}
-              />
+              <div className="flex flex-wrap gap-2">
+                <MediaUpload
+                  folder="share"
+                  kind="image"
+                  label="Upload cover"
+                  onUploaded={(url) => set("shareImageUrl", url)}
+                />
+                <AssetPicker
+                  kind="image"
+                  onSelect={(url) => set("shareImageUrl", url)}
+                />
+              </div>
               <input
                 className={inputCls}
                 value={state.shareImageUrl}
@@ -468,22 +483,37 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
               ))}
             </div>
           )}
-          <MediaUpload
-            folder="gallery"
-            label="Add photo"
-            onUploaded={(url) => set("gallery", [...state.gallery, url])}
-          />
+          <div className="flex flex-wrap gap-2">
+            <MediaUpload
+              folder="gallery"
+              kind="image"
+              label="Add photo"
+              onUploaded={(url) => set("gallery", [...state.gallery, url])}
+            />
+            <AssetPicker
+              kind="image"
+              label="Add from library"
+              onSelect={(url) => set("gallery", [...state.gallery, url])}
+            />
+          </div>
         </Fieldset>
 
         {/* Music */}
         <Fieldset title="Background music (optional)">
           <div className="space-y-2">
-            <MediaUpload
-              folder="music"
-              accept="audio/*"
-              label="Upload audio"
-              onUploaded={(url) => set("musicUrl", url)}
-            />
+            <div className="flex flex-wrap gap-2">
+              <MediaUpload
+                folder="music"
+                kind="audio"
+                accept="audio/*"
+                label="Upload audio"
+                onUploaded={(url) => set("musicUrl", url)}
+              />
+              <AssetPicker
+                kind="audio"
+                onSelect={(url) => set("musicUrl", url)}
+              />
+            </div>
             <input
               className={inputCls}
               value={state.musicUrl}
