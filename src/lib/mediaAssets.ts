@@ -1,103 +1,70 @@
 import { createBrowserSupabase } from "@/lib/supabase/client";
 
+const BUCKET = "invitation-assets";
+
 /** Images (hero / share / gallery) share one pool; audio is its own pool. */
 export type AssetKind = "image" | "audio";
 
+/** Storage folders that hold each kind of asset. */
+const FOLDERS: Record<AssetKind, string[]> = {
+  image: ["hero", "share", "gallery"],
+  audio: ["music"],
+};
+
 export type MediaAsset = {
-  id: string;
+  /** Storage path (e.g. "hero/123-abc.jpg") — unique, used as a React key. */
+  path: string;
   kind: AssetKind;
   url: string;
   label: string;
-  contentHash: string | null;
   createdAt: string;
 };
 
-type MediaAssetRow = {
-  id: string;
-  kind: AssetKind;
-  url: string;
-  label: string;
-  content_hash: string | null;
-  created_at: string;
-};
-
-function mapAsset(row: MediaAssetRow): MediaAsset {
-  return {
-    id: row.id,
-    kind: row.kind,
-    url: row.url,
-    label: row.label,
-    contentHash: row.content_hash,
-    createdAt: row.created_at,
-  };
-}
-
-/** SHA-256 hex digest of a file's contents, used to dedupe re-uploads. */
-export async function hashFile(file: File): Promise<string> {
-  const buffer = await file.arrayBuffer();
-  const digest = await crypto.subtle.digest("SHA-256", buffer);
-  return Array.from(new Uint8Array(digest))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-/** All shared assets of a kind, newest first. */
+/**
+ * Lists every previously uploaded asset of a kind, read straight from Supabase
+ * Storage so a file uploaded for one invitation can be reused in others.
+ */
 export async function listAssets(kind: AssetKind): Promise<MediaAsset[]> {
   const supabase = createBrowserSupabase();
-  const { data, error } = await supabase
-    .from("media_assets")
-    .select("id, kind, url, label, content_hash, created_at")
-    .eq("kind", kind)
-    .order("created_at", { ascending: false });
 
-  if (error) throw error;
-  return (data ?? []).map(mapAsset);
-}
+  const perFolder = await Promise.all(
+    FOLDERS[kind].map(async (folder) => {
+      const { data, error } = await supabase.storage.from(BUCKET).list(folder, {
+        limit: 200,
+        sortBy: { column: "created_at", order: "desc" },
+      });
+      if (error) throw error;
 
-/** Find an already-uploaded asset with the same contents, if any. */
-export async function findAssetByHash(
-  kind: AssetKind,
-  contentHash: string,
-): Promise<MediaAsset | null> {
-  const supabase = createBrowserSupabase();
-  const { data, error } = await supabase
-    .from("media_assets")
-    .select("id, kind, url, label, content_hash, created_at")
-    .eq("kind", kind)
-    .eq("content_hash", contentHash)
-    .limit(1)
-    .maybeSingle();
+      return (data ?? [])
+        // Skip Supabase's hidden ".emptyFolderPlaceholder" and any sub-folders.
+        .filter((obj) => obj.name && !obj.name.startsWith("."))
+        .map((obj): MediaAsset => {
+          const path = `${folder}/${obj.name}`;
+          const { data: pub } = supabase.storage
+            .from(BUCKET)
+            .getPublicUrl(path);
+          return {
+            path,
+            kind,
+            url: pub.publicUrl,
+            label: obj.name,
+            createdAt: obj.created_at ?? "",
+          };
+        });
+    }),
+  );
 
-  if (error) throw error;
-  return data ? mapAsset(data) : null;
+  return perFolder
+    .flat()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 /**
- * Record a freshly uploaded file in the shared library. Uses upsert on `url`
- * so the same URL is never recorded twice.
+ * Permanently deletes a file from Storage. Note: the file may be referenced by
+ * more than one invitation, so callers should confirm before deleting.
  */
-export async function recordAsset(input: {
-  kind: AssetKind;
-  url: string;
-  label: string;
-  contentHash?: string | null;
-}): Promise<void> {
+export async function deleteAsset(path: string): Promise<void> {
   const supabase = createBrowserSupabase();
-  const { error } = await supabase.from("media_assets").upsert(
-    {
-      kind: input.kind,
-      url: input.url,
-      label: input.label,
-      content_hash: input.contentHash ?? null,
-    },
-    { onConflict: "url" },
-  );
-  if (error) throw error;
-}
-
-/** Remove an asset from the library (does not delete the stored file). */
-export async function deleteAsset(id: string): Promise<void> {
-  const supabase = createBrowserSupabase();
-  const { error } = await supabase.from("media_assets").delete().eq("id", id);
+  const { error } = await supabase.storage.from(BUCKET).remove([path]);
   if (error) throw error;
 }

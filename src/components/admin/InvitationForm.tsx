@@ -381,7 +381,6 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
               <div className="flex flex-wrap gap-2">
                 <MediaUpload
                   folder="hero"
-                  kind="image"
                   label="Upload image"
                   onUploaded={(url) => set("heroImageUrl", url)}
                 />
@@ -432,7 +431,6 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
               <div className="flex flex-wrap gap-2">
                 <MediaUpload
                   folder="share"
-                  kind="image"
                   label="Upload cover"
                   onUploaded={(url) => set("shareImageUrl", url)}
                 />
@@ -487,7 +485,6 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
           <div className="flex flex-wrap gap-2">
             <MediaUpload
               folder="gallery"
-              kind="image"
               label="Add photo"
               onUploaded={(url) => set("gallery", [...state.gallery, url])}
             />
@@ -505,7 +502,6 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
             <div className="flex flex-wrap gap-2">
               <MediaUpload
                 folder="music"
-                kind="audio"
                 accept="audio/*"
                 label="Upload audio"
                 onUploaded={(url) => set("musicUrl", url)}

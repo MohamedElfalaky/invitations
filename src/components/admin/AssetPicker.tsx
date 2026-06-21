@@ -10,9 +10,9 @@ import {
 } from "@/lib/mediaAssets";
 
 /**
- * Dropdown to reuse a previously uploaded asset (image or audio) from the
- * shared library, instead of uploading the same file again. Calls `onSelect`
- * with the chosen asset's URL.
+ * Dropdown to reuse a previously uploaded asset (image or audio) from Supabase
+ * Storage, instead of uploading the same file again — so one file can be shared
+ * across many invitations. Calls `onSelect` with the chosen asset's URL.
  */
 export function AssetPicker({
   kind,
@@ -43,7 +43,8 @@ export function AssetPicker({
   function toggle() {
     const next = !open;
     setOpen(next);
-    if (next && assets === null) void load();
+    // Reload each time it opens so freshly uploaded files show up.
+    if (next) void load();
   }
 
   // Close when clicking outside.
@@ -61,12 +62,18 @@ export function AssetPicker({
     setOpen(false);
   }
 
-  async function remove(id: string) {
+  async function remove(asset: MediaAsset) {
+    if (
+      !window.confirm(
+        `Delete "${asset.label}" from storage? This removes the file for every invitation that uses it.`,
+      )
+    )
+      return;
     try {
-      await deleteAsset(id);
-      setAssets((prev) => prev?.filter((a) => a.id !== id) ?? null);
+      await deleteAsset(asset.path);
+      setAssets((prev) => prev?.filter((a) => a.path !== asset.path) ?? null);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to remove");
+      setError(e instanceof Error ? e.message : "Failed to delete");
     }
   }
 
@@ -94,11 +101,11 @@ export function AssetPicker({
           ) : kind === "image" ? (
             <div className="grid max-h-72 grid-cols-3 gap-2 overflow-y-auto">
               {assets.map((a) => (
-                <div key={a.id} className="group relative">
+                <div key={a.path} className="group relative">
                   <button
                     type="button"
                     onClick={() => choose(a.url)}
-                    title={a.label || a.url}
+                    title={a.label}
                     className="relative block aspect-square w-full overflow-hidden rounded-lg border border-neutral-200 hover:ring-2 hover:ring-neutral-900"
                   >
                     <Image
@@ -111,9 +118,9 @@ export function AssetPicker({
                   </button>
                   <button
                     type="button"
-                    onClick={() => remove(a.id)}
+                    onClick={() => remove(a)}
                     className="absolute end-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-black/60 text-[10px] text-white opacity-0 transition group-hover:opacity-100"
-                    aria-label="Remove from library"
+                    aria-label="Delete from storage"
                   >
                     ✕
                   </button>
@@ -123,20 +130,20 @@ export function AssetPicker({
           ) : (
             <ul className="max-h-72 space-y-1 overflow-y-auto">
               {assets.map((a) => (
-                <li key={a.id} className="flex items-center gap-2">
+                <li key={a.path} className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => choose(a.url)}
-                    title={a.label || a.url}
+                    title={a.label}
                     className="flex-1 truncate rounded-lg px-2 py-1.5 text-start text-sm hover:bg-neutral-100"
                   >
-                    🎵 {a.label || a.url}
+                    🎵 {a.label}
                   </button>
                   <button
                     type="button"
-                    onClick={() => remove(a.id)}
+                    onClick={() => remove(a)}
                     className="shrink-0 text-xs text-red-600"
-                    aria-label="Remove from library"
+                    aria-label="Delete from storage"
                   >
                     ✕
                   </button>
