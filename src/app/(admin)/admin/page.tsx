@@ -42,6 +42,7 @@ export default async function AdminDashboard() {
                   <th className="px-4 py-3 text-start font-medium">Date</th>
                   <th className="px-4 py-3 text-start font-medium">Theme</th>
                   <th className="px-4 py-3 text-start font-medium">RSVPs</th>
+                  <th className="px-4 py-3 text-start font-medium">Visits</th>
                   <th className="px-4 py-3 text-end font-medium">Actions</th>
                 </tr>
               </thead>
@@ -67,6 +68,9 @@ export default async function AdminDashboard() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-neutral-600">{inv.rsvpCount}</td>
+                    <td className="px-4 py-3 text-neutral-600">
+                      {inv.viewCount.toLocaleString()}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap items-center justify-end gap-2">
                         <Link

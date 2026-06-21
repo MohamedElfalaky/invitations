@@ -26,6 +26,7 @@ export type InvitationRow = {
   rsvp_enabled: boolean;
   extra_config: unknown;
   view_token?: string | null;
+  view_count?: number | null;
   created_at: string;
   updated_at: string;
 };
@@ -76,6 +77,7 @@ export function mapInvitation(row: InvitationRow): Invitation {
     rsvpEnabled: row.rsvp_enabled,
     extraConfig: (row.extra_config ?? {}) as Invitation["extraConfig"],
     viewToken: row.view_token ?? null,
+    viewCount: typeof row.view_count === "number" ? row.view_count : 0,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

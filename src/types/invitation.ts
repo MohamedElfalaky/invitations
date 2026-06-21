@@ -72,6 +72,11 @@ export type Invitation = {
    * pages, so it never leaks into a guest-facing bundle.
    */
   viewToken: string | null;
+  /**
+   * Total times the public invitation page has been opened. Populated for admin
+   * reads only (0 on public reads, which never select it).
+   */
+  viewCount: number;
   createdAt: string;
   updatedAt: string;
 };

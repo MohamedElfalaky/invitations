@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { InvitationView } from "@/components/InvitationView";
+import { ViewTracker } from "@/components/ViewTracker";
 import { getInvitationBySlug } from "@/lib/invitations";
 import type { Locale } from "@/types/invitation";
 
@@ -64,6 +65,7 @@ export default async function InvitationPage({ params }: Params) {
 
   return (
     <I18nProvider available={available} defaultLocale={defaultLocale}>
+      <ViewTracker slug={invitation.slug} />
       <InvitationView invitation={invitation} />
     </I18nProvider>
   );

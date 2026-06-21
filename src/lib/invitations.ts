@@ -19,8 +19,8 @@ import type {
 const PUBLIC_COLUMNS =
   "id, slug, theme, host_names, event_type, event_date, venue_name, venue_address, map_url, hero_image_url, gallery, music_url, languages, rsvp_enabled, extra_config, created_at, updated_at";
 
-// Admin reads additionally include the secret host-link token.
-const ADMIN_COLUMNS = `${PUBLIC_COLUMNS}, view_token`;
+// Admin reads additionally include the secret host-link token and visit count.
+const ADMIN_COLUMNS = `${PUBLIC_COLUMNS}, view_token, view_count`;
 
 export const invitationTag = (slug: string) => `invitation:${slug}`;
 

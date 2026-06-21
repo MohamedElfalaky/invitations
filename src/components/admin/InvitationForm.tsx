@@ -157,6 +157,7 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
       rsvpEnabled: state.rsvpEnabled,
       extraConfig: buildExtraConfig(state),
       viewToken: null,
+      viewCount: invitation?.viewCount ?? 0,
       createdAt: invitation?.createdAt ?? now,
       updatedAt: now,
     };
