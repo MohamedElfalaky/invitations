@@ -38,6 +38,13 @@ export type Messages = {
     mute: string;
   };
 
+  envelope: {
+    /** Italic caption shown under the closed envelope. */
+    caption: string;
+    /** Accessible label for the wax-seal tap target. */
+    open: string;
+  };
+
   footer: {
     cta: string;
     contact: string;

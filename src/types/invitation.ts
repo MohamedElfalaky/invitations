@@ -12,7 +12,7 @@ export type Localized = {
   ar: string;
 };
 
-export const THEME_KEYS = ["classic", "modern", "playful"] as const;
+export const THEME_KEYS = ["classic", "modern", "playful", "romance"] as const;
 export type ThemeKey = (typeof THEME_KEYS)[number];
 
 export const EVENT_TYPES = [

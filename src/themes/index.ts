@@ -3,6 +3,7 @@ import type { ThemeKey, ThemeProps } from "@/types/invitation";
 import { ClassicTheme } from "./classic/ClassicTheme";
 import { ModernTheme } from "./modern/ModernTheme";
 import { PlayfulTheme } from "./playful/PlayfulTheme";
+import { RomanceTheme } from "./romance/RomanceTheme";
 
 /**
  * Theme registry. To add a new theme:
@@ -16,6 +17,7 @@ export const THEMES: Record<ThemeKey, ComponentType<ThemeProps>> = {
   classic: ClassicTheme,
   modern: ModernTheme,
   playful: PlayfulTheme,
+  romance: RomanceTheme,
 };
 
 /** Human-friendly labels for the admin theme picker. */
@@ -23,4 +25,5 @@ export const THEME_LABELS: Record<ThemeKey, string> = {
   classic: "Classic",
   modern: "Modern",
   playful: "Playful",
+  romance: "Romance",
 };

@@ -43,6 +43,11 @@ export const ar: Messages = {
     mute: "كتم الموسيقى",
   },
 
+  envelope: {
+    caption: "هذه الدعوة مخصصة لكم وحدكم",
+    open: "افتح الدعوة",
+  },
+
   footer: {
     cta: "تريد دعوة مثل هذه؟",
     contact: "تواصل معنا عبر واتساب",

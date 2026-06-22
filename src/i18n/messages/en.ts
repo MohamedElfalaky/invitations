@@ -43,6 +43,11 @@ export const en: Messages = {
     mute: "Mute music",
   },
 
+  envelope: {
+    caption: "This invitation is exclusive for you",
+    open: "Open invitation",
+  },
+
   footer: {
     cta: "Want an invitation like this one?",
     contact: "Chat with us on WhatsApp",
