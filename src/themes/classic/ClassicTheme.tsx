@@ -45,7 +45,11 @@ export function ClassicTheme({ invitation }: ThemeProps) {
           className="relative mx-auto flex max-w-2xl flex-col items-center px-6 py-24 text-center"
         >
           {headline && (
-            <p className="text-sm uppercase tracking-[0.3em] text-[#a98b5d]">
+            <p
+              className={`whitespace-pre-line text-sm text-[#a98b5d] ${
+                locale === "ar" ? display : "uppercase tracking-[0.3em]"
+              }`}
+            >
               {headline}
             </p>
           )}
@@ -53,7 +57,9 @@ export function ClassicTheme({ invitation }: ThemeProps) {
             {m.invitedTo.replace("{event}", m.eventType[invitation.eventType])}
           </p>
 
-          <h1 className={`mt-3 text-5xl leading-tight sm:text-6xl ${display}`}>
+          <h1
+            className={`mt-3 whitespace-pre-line text-5xl leading-tight sm:text-6xl ${display}`}
+          >
             {hostNames}
           </h1>
 
@@ -78,7 +84,7 @@ export function ClassicTheme({ invitation }: ThemeProps) {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className={`text-center text-2xl leading-relaxed text-[#5b5347] ${display}`}
+            className={`whitespace-pre-line text-center text-2xl leading-relaxed text-[#5b5347] ${display}`}
           >
             {message}
           </motion.p>

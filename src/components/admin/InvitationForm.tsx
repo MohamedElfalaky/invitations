@@ -237,7 +237,8 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className={labelCls}>Host names (English)</label>
-              <input
+              <textarea
+                rows={2}
                 className={inputCls}
                 value={state.hostNames.en}
                 onChange={(e) => onHostNameChange("en", e.target.value)}
@@ -246,7 +247,8 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
             </div>
             <div>
               <label className={labelCls}>Host names (Arabic)</label>
-              <input
+              <textarea
+                rows={2}
                 dir="rtl"
                 className={inputCls}
                 value={state.hostNames.ar}
@@ -289,7 +291,8 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className={labelCls}>Headline (English)</label>
-              <input
+              <textarea
+                rows={2}
                 className={inputCls}
                 value={state.headlineEn}
                 onChange={(e) => set("headlineEn", e.target.value)}
@@ -298,7 +301,8 @@ export function InvitationForm({ invitation }: { invitation?: Invitation }) {
             </div>
             <div>
               <label className={labelCls}>Headline (Arabic)</label>
-              <input
+              <textarea
+                rows={2}
                 dir="rtl"
                 className={inputCls}
                 value={state.headlineAr}
