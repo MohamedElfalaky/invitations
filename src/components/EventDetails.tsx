@@ -22,12 +22,8 @@ export function EventDetails({
 }: EventDetailsProps) {
   const { m, localized, formatDate } = useI18n();
 
-  const dateLabel = formatDate(invitation.eventDate, {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const eventDate = new Date(invitation.eventDate);
+  const dateLabel = `${eventDate.getDate()}-${eventDate.getMonth() + 1}-${eventDate.getFullYear()}`;
   const timeLabel = formatDate(invitation.eventDate, {
     hour: "numeric",
     minute: "2-digit",
